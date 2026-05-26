@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>空天信息资源中心 - 任务管理</title>
+  <link rel="stylesheet" href="https://unpkg.com/antd@5.24.0/dist/reset.css" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/dayjs@1.11.13/dayjs.min.js"></script>
+  <script src="https://unpkg.com/antd@5.24.0/dist/antd.min.js"></script>
+  <script src="https://unpkg.com/@ant-design/icons@5.5.1/dist/index.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Segoe UI', Roboto, sans-serif; }
+
+    /* —— 侧栏 —— */
+    .app-sider { background: #1b2d3e !important; box-shadow: 0 2px 4px rgba(2, 14, 25, 0.3); }
+    .sider-logo {
+      display: flex; align-items: center; gap: 8px;
+      padding: 20px 16px; color: #fff;
+    }
+    .sider-logo-icon {
+      width: 24px; height: 24px; border-radius: 4px;
+      background: linear-gradient(135deg, #1677ff 0%, #722ed1 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+    .sider-logo-text {
+      font-size: 18px; font-weight: 700; letter-spacing: 0.9px; line-height: 18px;
+      white-space: nowrap;
+    }
+    .app-sider .ant-menu-dark { background: transparent; }
+    .app-sider .ant-menu-dark .ant-menu-sub { background: #172635 !important; }
+    .app-sider .ant-menu-dark .ant-menu-item-selected {
+      background: #1c3f5e !important;
+    }
+    .app-sider .ant-menu-dark .ant-menu-submenu-title:hover,
+    .app-sider .ant-menu-dark .ant-menu-item:hover {
+      background: rgba(255,255,255,0.06) !important;
+    }
+    .app-sider .ant-menu-dark .ant-menu-submenu-open > .ant-menu-submenu-title {
+      color: #4dacff !important;
+    }
+    .sider-collapse-btn {
+      padding: 12px 16px; color: rgba(255,255,255,0.65); cursor: pointer;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* —— 顶栏 —— */
+    .global-header {
+      background: #1b2d3e; height: 48px; padding: 0 16px;
+      display: flex; align-items: center; justify-content: flex-end;
+      color: #fff;
+    }
+    .global-header .ant-avatar { background: #1677ff; }
+
+    /* —— 页面 Tabs —— */
+    .page-tabs { background: #fff; padding: 0 16px; border-bottom: 1px solid #f0f0f0; }
+    .page-tabs .ant-tabs-nav { margin-bottom: 0; }
+
+    /* —— 主内容 —— */
+    .page-content { padding: 16px; min-height: calc(100vh - 48px - 38px); }
+
+    /* —— 统计看板 —— */
+    .stats-board {
+      display: flex; align-items: stretch;
+      height: 112px; background: #fff;
+      border: 1px solid rgba(0,0,0,0.06); border-radius: 2px;
+      margin-bottom: 16px; overflow: hidden;
+    }
+    .stat-item {
+      flex: 1; position: relative; padding: 24px 16px 24px 24px;
+      cursor: pointer; transition: background 0.2s;
+      min-width: 0;
+    }
+    .stat-item:not(:first-child)::before {
+      content: ''; position: absolute; left: 0; top: 24px; bottom: 24px;
+      width: 1px; background: rgba(0,0,0,0.06);
+    }
+    .stat-item.active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 2px; background: #1677ff;
+    }
+    .stat-item.highlight::after {
+      background: #e6f4ff;
+    }
+    .stat-item-label {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 14px; color: rgba(0,0,0,0.9); line-height: 14px; margin-bottom: 8px;
+    }
+    .stat-icon-wrap {
+      width: 16px; height: 16px; border-radius: 4px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #fff;
+    }
+    .stat-icon-wrap.blue { background: #1677ff; }
+    .stat-icon-wrap.green { background: #52c41a; }
+    .stat-icon-wrap.pink { background: #eb2f96; }
+    .stat-icon-wrap.orange { background: #faad14; color: #fff; }
+    .stat-icon-wrap.volcano { background: #fa541c; }
+    .stat-icon-wrap.red { background: #ff4d4f; }
+    .stat-item-value {
+      font-size: 30px; font-weight: 700; line-height: 40px;
+      color: rgba(0,0,0,0.9);
+      font-family: 'DIN Alternate', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+    }
+
+    /* —— 内容卡片 —— */
+    .content-card {
+      background: #fff; border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 2px; overflow: hidden;
+    }
+    .table-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px; border-bottom: 1px solid #f0f0f0;
+    }
+    .table-title-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 8px 0;
+    }
+    .table-title-row .label { font-size: 14px; color: rgba(0,0,0,0.88); white-space: nowrap; }
+    .table-wrap { padding: 0 16px 16px; }
+    .table-wrap .ant-table-thead > tr > th { background: rgba(0,0,0,0.02) !important; font-weight: 600; }
+    .table-wrap .ant-table-tbody > tr.ant-table-row-selected > td { background: #e6f4ff !important; }
+    .table-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 8px; border-top: 1px solid #f0f0f0;
+      font-size: 14px; color: rgba(0,0,0,0.88);
+    }
+
+    /* —— 详情页 —— */
+    .section-title {
+      font-size: 14px; font-weight: 600; color: #1677ff;
+      margin-bottom: 12px; padding-left: 8px; border-left: 3px solid #1677ff;
+    }
+    .highlight-time { color: #1677ff; font-weight: 500; }
+    .map-panel {
+      height: 320px; border-radius: 2px;
+      background: #e8eef4 url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80') center/cover;
+      position: relative; overflow: hidden; border: 1px solid #d9d9d9;
+    }
+    .map-aoi {
+      position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%);
+      width: 120px; height: 90px; border: 2px solid #faad14;
+      background: rgba(250, 173, 20, 0.12);
+    }
+    .map-pin {
+      position: absolute; left: 52%; top: 48%;
+      width: 12px; height: 12px; background: #52c41a; border-radius: 50%;
+      border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .approval-flow { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+    .approval-step-item { padding: 12px 14px; border: 1px solid #f0f0f0; border-radius: 2px; background: #fafafa; }
+    .approval-step-item.approval-step-process { border-color: #91caff; background: #f0f7ff; }
+    .approval-step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .approval-step-title { font-weight: 600; font-size: 14px; }
+    .approval-step-time { font-size: 12px; color: #8c8c8c; }
+    .approval-comment-label { font-size: 12px; color: #595959; margin-bottom: 6px; display: flex; align-items: center; }
+    .approval-comment-read {
+      font-size: 13px; padding: 8px 10px; background: #fff;
+      border-radius: 2px; border: 1px solid #f0f0f0;
+    }
+    .approval-done { color: #52c41a; }
+    .approval-pending { color: #faad14; }
+    .approval-wait { color: #bfbfbf; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
