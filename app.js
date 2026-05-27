@@ -625,22 +625,26 @@ function AppLayout({ children, selectedMenu, detailTaskId, onBackToList, role, o
         'div',
         { className: 'global-header' },
         React.createElement(
-          Segmented,
-          {
-            className: 'header-role-switch',
-            value: role,
-            onChange: onRoleChange,
-            options: [
-              { label: '需求方', value: 'demander' },
-              { label: '运营商', value: 'supplier' }
-            ]
-          }
-        ),
-        React.createElement(
-          Space,
-          { size: 12, className: 'global-header-user' },
-          React.createElement(Avatar, { size: 32 }, 'A'),
-          React.createElement('span', { style: { fontSize: 14 } }, 'admin')
+          'div',
+          { className: 'global-header-actions' },
+          React.createElement(
+            Segmented,
+            {
+              className: 'header-role-switch',
+              value: role,
+              onChange: onRoleChange,
+              options: [
+                { label: '需求方', value: 'demander' },
+                { label: '运营商', value: 'supplier' }
+              ]
+            }
+          ),
+          React.createElement(
+            Space,
+            { size: 12, className: 'global-header-user' },
+            React.createElement(Avatar, { size: 32 }, 'A'),
+            React.createElement('span', { style: { fontSize: 14 } }, 'admin')
+          )
         )
       ),
       React.createElement(

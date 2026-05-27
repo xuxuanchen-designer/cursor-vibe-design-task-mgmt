@@ -53,25 +53,37 @@
     /* —— 顶栏 —— */
     .global-header {
       background: #1b2d3e; height: 48px; padding: 0 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      color: #fff;
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 16px; flex-shrink: 0; position: relative; z-index: 10;
+      color: #fff; width: 100%; box-sizing: border-box;
+    }
+    .global-header-actions {
+      display: flex; align-items: center; gap: 16px;
+      flex-shrink: 0; min-width: 0;
     }
     .global-header .ant-avatar { background: #1677ff; }
-    .global-header-user { color: #fff; }
+    .global-header-user { color: #fff; white-space: nowrap; flex-shrink: 0; }
     .header-role-switch.ant-segmented {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.16);
       padding: 2px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.28);
     }
     .header-role-switch .ant-segmented-item {
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.88);
       min-width: 72px;
     }
     .header-role-switch .ant-segmented-item-selected {
       color: #1b2d3e;
       background: #fff;
+      font-weight: 500;
     }
     .header-role-switch .ant-segmented-thumb {
       background: #fff;
+    }
+    .ant-layout-has-sider > .ant-layout {
+      min-width: 0;
+      flex: 1 1 auto;
     }
 
     /* —— 页面 Tabs —— */
@@ -369,6 +381,11 @@
       .detail-layout { flex-direction: column; }
       .detail-side { flex: 1 1 auto; max-width: none; width: 100%; }
       .detail-field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1280px) {
+      .header-role-switch .ant-segmented-item { min-width: 64px; }
+      .sider-logo-text { font-size: 15px; letter-spacing: 0.4px; }
+      .stats-board { overflow-x: auto; }
     }
 
     .section-title {
