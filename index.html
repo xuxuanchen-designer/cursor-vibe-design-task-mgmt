@@ -18,11 +18,43 @@
     body { margin: 0; background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Segoe UI', Roboto, sans-serif; }
 
     /* —— 侧栏 —— */
-    .app-sider { background: #1b2d3e !important; box-shadow: 0 2px 4px rgba(2, 14, 25, 0.3); }
+    .app-sider {
+      background: #1b2d3e !important;
+      box-shadow: 0 2px 4px rgba(2, 14, 25, 0.3);
+    }
+    .app-sider > .ant-layout-sider-children {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+    .app-sider .ant-menu {
+      flex: 0 0 auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .app-sider .ant-layout-sider-trigger {
+      position: static;
+      width: 100%;
+      height: auto;
+      line-height: 1;
+      border-top: none;
+      background: transparent !important;
+      padding: 0;
+      flex-shrink: 0;
+    }
     .sider-logo {
       display: flex; align-items: center; gap: 8px;
       padding: 20px 16px; color: #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: padding 0.2s;
     }
+    .app-sider.ant-layout-sider-collapsed .sider-logo {
+      justify-content: center;
+      padding: 20px 8px;
+    }
+    .app-sider.ant-layout-sider-collapsed .sider-logo-text { display: none; }
     .sider-logo-icon {
       width: 24px; height: 24px; border-radius: 4px;
       background: linear-gradient(135deg, #1677ff 0%, #722ed1 100%);
@@ -46,8 +78,23 @@
       color: #4dacff !important;
     }
     .sider-collapse-btn {
-      padding: 12px 16px; color: rgba(255,255,255,0.65); cursor: pointer;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      padding: 12px 16px 12px 24px;
+      color: rgba(255,255,255,0.65);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .app-sider .ant-layout-sider-trigger:hover .sider-collapse-btn {
+      color: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,0.06);
+    }
+    .sider-fold-icon { display: inline-flex; line-height: 0; pointer-events: none; }
+    .app-sider.ant-layout-sider-collapsed .sider-collapse-btn {
+      justify-content: center;
+      padding: 12px 8px;
     }
 
     /* —— 顶栏 —— */

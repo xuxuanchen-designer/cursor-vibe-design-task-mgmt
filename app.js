@@ -15,7 +15,7 @@ const {
   CloudUploadOutlined, CloudDownloadOutlined, DeleteOutlined,
   PlusOutlined, EnvironmentOutlined, UserOutlined, ApartmentOutlined,
   ExclamationCircleOutlined, ArrowLeftOutlined, MinusCircleOutlined,
-  GlobalOutlined, MenuFoldOutlined, PictureOutlined, InfoCircleFilled,
+  GlobalOutlined, PictureOutlined, InfoCircleFilled,
   FileZipOutlined, PaperClipOutlined, UploadOutlined, LoadingOutlined
 } = Icons;
 
@@ -563,8 +563,55 @@ function StatsBoard({ stats, activeKey, onChange }) {
   );
 }
 
+// ——— 侧栏折叠图标（左箭头 + 三横线） ———
+function SiderCollapseIcon({ collapsed }) {
+  return React.createElement(
+    'span',
+    { className: 'sider-fold-icon', 'aria-hidden': true },
+    React.createElement(
+      'svg',
+      { width: 16, height: 16, viewBox: '0 0 16 16', fill: 'none' },
+      collapsed
+        ? [
+            React.createElement('path', {
+              key: 'arrow',
+              d: 'M5.2 3.2L9.8 8L5.2 12.8',
+              stroke: 'currentColor',
+              strokeWidth: 1.2,
+              strokeLinecap: 'round',
+              strokeLinejoin: 'round'
+            }),
+            React.createElement('rect', { key: 'l1', x: 10.5, y: 2.8, width: 4, height: 1.2, rx: 0.6, fill: 'currentColor' }),
+            React.createElement('rect', { key: 'l2', x: 10.5, y: 7.4, width: 3, height: 1.2, rx: 0.6, fill: 'currentColor' }),
+            React.createElement('rect', { key: 'l3', x: 10.5, y: 12, width: 2, height: 1.2, rx: 0.6, fill: 'currentColor' })
+          ]
+        : [
+            React.createElement('path', {
+              key: 'arrow',
+              d: 'M6.2 3.2L1.6 8L6.2 12.8',
+              stroke: 'currentColor',
+              strokeWidth: 1.2,
+              strokeLinecap: 'round',
+              strokeLinejoin: 'round'
+            }),
+            React.createElement('rect', { key: 'l1', x: 8.5, y: 2.8, width: 4, height: 1.2, rx: 0.6, fill: 'currentColor' }),
+            React.createElement('rect', { key: 'l2', x: 8.5, y: 7.4, width: 3, height: 1.2, rx: 0.6, fill: 'currentColor' }),
+            React.createElement('rect', { key: 'l3', x: 8.5, y: 12, width: 2, height: 1.2, rx: 0.6, fill: 'currentColor' })
+          ]
+    )
+  );
+}
+
 // ——— 布局 ———
 function AppLayout({ children, selectedMenu, detailTaskId, onBackToList, role, onRoleChange }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [openKeys, setOpenKeys] = useState(['observe']);
+
+  const handleCollapse = useCallback((nextCollapsed) => {
+    setCollapsed(nextCollapsed);
+    setOpenKeys(nextCollapsed ? [] : ['observe']);
+  }, []);
+
   const menuItems = [
     {
       key: 'overview',
@@ -597,7 +644,20 @@ function AppLayout({ children, selectedMenu, detailTaskId, onBackToList, role, o
     { style: { minHeight: '100vh' } },
     React.createElement(
       Layout.Sider,
-      { width: 218, className: 'app-sider', theme: 'dark' },
+      {
+        width: 218,
+        collapsedWidth: 64,
+        className: 'app-sider',
+        theme: 'dark',
+        collapsible: true,
+        collapsed,
+        onCollapse: handleCollapse,
+        trigger: React.createElement(
+          'div',
+          { className: 'sider-collapse-btn' },
+          React.createElement(SiderCollapseIcon, { collapsed })
+        )
+      },
       React.createElement(
         'div',
         { className: 'sider-logo' },
@@ -607,16 +667,13 @@ function AppLayout({ children, selectedMenu, detailTaskId, onBackToList, role, o
       React.createElement(Menu, {
         mode: 'inline',
         theme: 'dark',
-        defaultOpenKeys: ['observe'],
+        inlineCollapsed: collapsed,
+        openKeys,
+        onOpenChange: setOpenKeys,
         selectedKeys: [selectedMenu || 'tasks'],
-        style: { borderRight: 0, flex: 1 },
+        style: { borderRight: 0 },
         items: menuItems
-      }),
-      React.createElement(
-        'div',
-        { className: 'sider-collapse-btn' },
-        React.createElement(MenuFoldOutlined)
-      )
+      })
     ),
     React.createElement(
       Layout,
