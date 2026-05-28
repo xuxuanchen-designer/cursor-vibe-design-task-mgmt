@@ -1,3 +1,6 @@
 .DS_Store
+.bin/
 001/
 satellite-tracker-3d/
+*.log
+.tunnel.log
