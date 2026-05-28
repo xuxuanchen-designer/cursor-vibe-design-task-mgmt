@@ -78,12 +78,12 @@ gh api "repos/{owner}/${REPO_NAME}/pages" \
   -X POST \
   -f build_type=legacy \
   -f source[branch]="$BRANCH" \
-  -f source[path]="/" 2>/dev/null \
+  -f source[path]="/002" 2>/dev/null \
   || gh api "repos/{owner}/${REPO_NAME}/pages" \
     -X PUT \
     -f build_type=legacy \
     -f source[branch]="$BRANCH" \
-    -f source[path]="/"
+    -f source[path]="/002"
 
 OWNER="$(gh api user -q .login)"
 PAGES_URL="https://${OWNER}.github.io/${REPO_NAME}/"

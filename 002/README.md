@@ -14,7 +14,7 @@
 在项目目录启动静态服务（避免部分浏览器对本地脚本的限制）：
 
 ```bash
-cd "/Users/haoting/Documents/cursor vibe design"
+cd "/Users/haoting/Documents/cursor vibe design/002"
 python3 -m http.server 5173
 ```
 
